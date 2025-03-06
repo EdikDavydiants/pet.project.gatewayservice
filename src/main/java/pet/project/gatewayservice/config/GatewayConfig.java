@@ -8,25 +8,37 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class GatewayConfig {
 
-    private final static String AUTH_SERVICE_ROUTE_ID = "1";
-    private final static String AUTH_SERVICE_PREFIX = "api/auth";
+    private final static String REGISTER_ROUTE_ID = "0";
+    private final static String REGISTER_PREFIX = "api/auth/register";
     private final static String AUTH_SERVICE_URI = "http://localhost:8081";
 
-    private final static String USER_SERVICE_ROUTE_ID = "2";
+    private final static String LOGIN_ROUTE_ID = "1";
+    private final static String LOGIN_PREFIX = "api/auth/login";
+
+    private final static String AUTH_SERVICE_ROUTE_ID = "2";
+    private final static String AUTH_SERVICE_PREFIX = "api/auth";
+
+    private final static String USER_SERVICE_ROUTE_ID = "3";
     private final static String USER_SERVICE_PREFIX = "api/users";
     private final static String USER_SERVICE_URI = "http://localhost:8082";
 
-    private final static String POST_SERVICE_ROUTE_ID = "3";
+    private final static String POST_SERVICE_ROUTE_ID = "4";
     private final static String POST_SERVICE_PREFIX = "api/posts";
     private final static String POST_SERVICE_URI = "http://localhost:8083";
 
-    private final static String NOTIFICATION_SERVICE_ROUTE_ID = "4";
+    private final static String NOTIFICATION_SERVICE_ROUTE_ID = "5";
     private final static String NOTIFICATION_SERVICE_PREFIX = "api/notifications";
     private final static String NOTIFICATION_SERVICE_URI = "http://localhost:8084";
 
     @Bean
     public RouteLocator routeLocator(RouteLocatorBuilder builder) {
         return builder.routes()
+                .route(REGISTER_ROUTE_ID, r -> r.path(REGISTER_PREFIX + "/**")
+                        .filters(f -> f.stripPrefix(2))
+                        .uri(AUTH_SERVICE_URI))
+                .route(LOGIN_ROUTE_ID, r -> r.path(LOGIN_PREFIX + "/**")
+                        .filters(f -> f.stripPrefix(2))
+                        .uri(AUTH_SERVICE_URI))
                 .route(AUTH_SERVICE_ROUTE_ID, r -> r.path(AUTH_SERVICE_PREFIX + "/**")
                         .filters(f -> f.stripPrefix(2))
                         .uri(AUTH_SERVICE_URI))
